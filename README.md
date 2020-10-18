@@ -1,3 +1,6 @@
+## What is EyeV
+EyeV is an identification app which can be used to identify/verify a person's identity by comparing their image from an ID document with a live image of them.
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

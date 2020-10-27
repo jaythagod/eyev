@@ -4,11 +4,12 @@ import Clarifai from 'clarifai';
 import Navigation from './components/Navigation/Navigation';
 import Logo from './components/Logo/Logo';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
+import FacialRecognition from './components/FacialRecognition/FacialRecognition';
 import Rank from './components/Rank/Rank';
 import './App.css';
 
 const app = new Clarifai.App({
-  apiKey: '5f2d02978c49462c9ede96a736ca41f5'
+  apiKey: '92bf6f3dfac149d3b6e1347ed632acd7'
  });
 
 const particlesOptions = {
@@ -26,23 +27,26 @@ class App extends Component{
   constructor(){
     super();
     this.state = {
-      input:''
+      input:'',
+      imageUrl:''
     }
   }
 
   onInputChange = (event) =>{
-    console.log(event.target.value);
+    this.setState({input:event.target.value});
   }
 
   onButtonSubmit = () =>{
+
+    this.setState({imageUrl: this.state.input});
     
-    app.models.initModel({id: Clarifai.GENERAL_MODEL, version: "aa7f35c01e0642fda5cf400f543e7c40"})
+    app.models.initModel({id: Clarifai.FACE_DETECT_MODEL})
       .then(generalModel => {
-        return generalModel.predict("https://samples.clarifai.com/face-det.jpg");
+        //"https://samples.clarifai.com/face-det.jpg"
+        return generalModel.predict(this.state.input);
       })
       .then(response => {
-        var concepts = response['outputs'][0]['data']['concepts'];
-        console.log(concepts);
+        console.log(response.outputs[0].data.regions[0].region_info.bounding_box);
       })
   }
 
@@ -54,7 +58,7 @@ class App extends Component{
         <Logo />
         <Rank />
         <ImageLinkForm onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit} />
-        {/*<FacialRecognition />*/}
+        <FacialRecognition imageUrl={this.state.imageUrl} />
       </div>
     );
   } 
